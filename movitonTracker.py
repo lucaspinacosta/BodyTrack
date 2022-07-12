@@ -38,8 +38,8 @@ class poseDetector():
             for id, lm in enumerate(self.results.pose_landmarks.landmark):
                 #print(id, lm)
                 h, w, c = img.shape
-                cx,cy,cz = int(lm.x*w),int(lm.y*h),int(lm.z*c)
-                lmList.append({'id':id,'xPos':cx,'yPos':cy,"zPos":cz})
+                cx,cy = int(lm.x*w),int(lm.y*h)
+                lmList.append({'id':id,'xPos':cx,'yPos':cy})
                 #print('\n',lmList)
                 """if id == 4:
                     print(id,cx,cy)"""
