@@ -50,41 +50,43 @@ class poseDetector():
         return lmList
 
 
-def main():
+def main(vid_path):
     # cap = cv2.VideoCapture("videos/1.mp4")
 
     pTime = 0
     detector = poseDetector()
-    for i in range(1, 6):
-        vid_path = "videos/"+str(i)+".mp4"
-        cap = cv2.VideoCapture(vid_path)
-        while True:
 
-            sucess, img = cap.read()
-            img = detector.findPose(img)
-            lmList = detector.getPose(img)
-            print("\n", lmList)
-            cTime = time.time()
-            fps = 1/(cTime-pTime)
-            pTime = cTime
+    cap = cv2.VideoCapture(vid_path)
+    while True:
 
-            # show fps
-            cv2.putText(img, str(int(fps)), (70, 50),
-                        cv2.FONT_HERSHEY_COMPLEX, 3, (255, 0, 0), 3)
+        sucess, img = cap.read()
+        img = detector.findPose(img)
+        lmList = detector.getPose(img)
+        print("\n", lmList)
+        cTime = time.time()
+        fps = 1/(cTime-pTime)
+        pTime = cTime
 
-            # Calculate new width and height for resizing
-            h, w, _ = img.shape
-            aspect_ratio = w / h
-            new_width = 720
-            new_height = int(new_width / aspect_ratio)
+        # show fps
+        cv2.putText(img, str(int(fps)), (70, 50),
+                    cv2.FONT_HERSHEY_COMPLEX, 3, (255, 0, 0), 3)
 
-            # Resize frame
-            frame1080 = cv2.resize(img, (new_width, new_height),
-                                   interpolation=cv2.INTER_AREA)
+        # Calculate new width and height for resizing
+        h, w, _ = img.shape
+        aspect_ratio = w / h
+        new_width = 720
+        new_height = int(new_width / aspect_ratio)
 
-            cv2.imshow("Image", frame1080)
-            cv2.waitKey(1)
+        # Resize frame
+        frame1080 = cv2.resize(img, (new_width, new_height),
+                               interpolation=cv2.INTER_AREA)
+
+        cv2.imshow("Image", frame1080)
+        cv2.waitKey(1)
 
 
 if __name__ == "__main__":
-    main()
+    # for i in range(3, 6):
+    # vid_path = "videos/"+str(i)+".mp4"
+    vid_path = "videos/3.mp4"
+    main(vid_path)
