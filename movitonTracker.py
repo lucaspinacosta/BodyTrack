@@ -35,6 +35,19 @@ class poseDetector():
                     img, self.results.pose_landmarks, self.mpPose.POSE_CONNECTIONS)
 
         return img
+    
+    def list_available_cameras(self):
+        # Create an empty list to store available camera indices
+        available_cameras = []
+
+        # Check the first 10 camera indices
+        for index in range(10):
+            cap = cv2.VideoCapture(index)
+            if cap.read()[0]:
+                available_cameras.append(index)
+            cap.release()
+
+        return available_cameras
 
     def getPose(self, img):
         lmList = []
@@ -52,37 +65,40 @@ class poseDetector():
 
 def main(vid_path):
     # cap = cv2.VideoCapture("videos/1.mp4")
-
     pTime = 0
     detector = poseDetector()
+    listCam = detector.list_available_cameras()
+    
+    print(f"{listCam}")
 
-    cap = cv2.VideoCapture(vid_path)
+    cap = cv2.VideoCapture(4)
     while True:
 
         sucess, img = cap.read()
-        img = detector.findPose(img)
-        lmList = detector.getPose(img)
-        print("\n", lmList)
-        cTime = time.time()
-        fps = 1/(cTime-pTime)
-        pTime = cTime
+        if sucess:
+            img = detector.findPose(img)
+            lmList = detector.getPose(img)
+            print("\n", lmList)
+            cTime = time.time()
+            fps = 1/(cTime-pTime)
+            pTime = cTime
 
-        # show fps
-        cv2.putText(img, str(int(fps)), (70, 50),
-                    cv2.FONT_HERSHEY_COMPLEX, 3, (255, 0, 0), 3)
+            # show fps
+            cv2.putText(img, str(int(fps)), (70, 50),
+                        cv2.FONT_HERSHEY_COMPLEX, 3, (255, 0, 0), 3)
 
-        # Calculate new width and height for resizing
-        h, w, _ = img.shape
-        aspect_ratio = w / h
-        new_width = 720
-        new_height = int(new_width / aspect_ratio)
+            # Calculate new width and height for resizing
+            h, w, _ = img.shape
+            aspect_ratio = w / h
+            new_width = 720
+            new_height = int(new_width / aspect_ratio)
 
-        # Resize frame
-        frame1080 = cv2.resize(img, (new_width, new_height),
-                               interpolation=cv2.INTER_AREA)
+            # Resize frame
+            frame1080 = cv2.resize(img, (new_width, new_height),
+                                interpolation=cv2.INTER_AREA)
 
-        cv2.imshow("Image", frame1080)
-        cv2.waitKey(1)
+            cv2.imshow("Image", frame1080)
+            cv2.waitKey(1)
 
 
 if __name__ == "__main__":
